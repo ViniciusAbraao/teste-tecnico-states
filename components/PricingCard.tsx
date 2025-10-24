@@ -52,10 +52,10 @@ export const PricingCard = ({
           {/* Imagem do produto */}
           <div className="w-32 h-32 flex items-center justify-center">
             <img 
-                src={image} 
-                alt={title} 
-                style={imageStyle}
-                className="max-w-full max-h-full object-contain" 
+              src={image} 
+              alt={`Product image for ${title}`}
+              style={imageStyle}
+              className="max-w-full max-h-full object-contain" 
             />
           </div>
 
@@ -96,7 +96,8 @@ export const PricingCard = ({
 
           {/* Botão de pedido */}
           <Button 
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="w-full bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-bold py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            aria-label="Order Now"
           >
             🛒 Order Now
             <div className="text-xs font-normal ml-2">Great Offer!</div>
@@ -104,10 +105,10 @@ export const PricingCard = ({
 
           {/* Ícones de pagamento */}
           <div className="flex items-center gap-2 justify-center flex-wrap">
-            <div className="w-8 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">VISA</div>
-            <div className="w-8 h-6 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">MC</div>
-            <div className="w-8 h-6 bg-blue-400 rounded flex items-center justify-center text-white text-xs font-bold">AE</div>
-            <div className="w-8 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-xs font-bold">DC</div>
+            <div className="w-8 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold" aria-label="Pay with VISA">VISA</div>
+            <div className="w-8 h-6 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold" aria-label="Pay with MasterCard">MC</div>
+            <div className="w-8 h-6 bg-blue-400 rounded flex items-center justify-center text-white text-xs font-bold" aria-label="Pay with American Express">AE</div>
+            <div className="w-8 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-xs font-bold" aria-label="Pay with Discover">DC</div>
           </div>
 
           {/* Total e frete */}

@@ -145,7 +145,7 @@ export default function YouTubePage() {
         <div className="flex items-center justify-between h-full px-4">
           {/* Seção esquerda do header */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100" aria-label="Open menu">
               <Menu className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-1">
@@ -159,10 +159,10 @@ export default function YouTubePage() {
               <div className="flex-1 flex items-center border border-gray-300 rounded-l-full h-10 px-4 focus-within:border-blue-500">
                 <input type="text" placeholder="Search" className="flex-1 outline-none text-sm" />
               </div>
-              <Button className="h-10 px-6 rounded-r-full rounded-l-none bg-gray-50 hover:bg-gray-100 border border-l-0 border-gray-300">
+              <Button className="h-10 px-6 rounded-r-full rounded-l-none bg-gray-50 hover:bg-gray-100 border border-l-0 border-gray-300" aria-label="Search">
                 <Search className="h-5 w-5 text-gray-600" />
               </Button>
-              <Button variant="ghost" size="icon" className="ml-2 hover:bg-gray-100 rounded-full">
+              <Button variant="ghost" size="icon" className="ml-2 hover:bg-gray-100 rounded-full" aria-label="Voice search">
                 <Mic className="h-5 w-5" />
               </Button>
             </div>
@@ -170,17 +170,17 @@ export default function YouTubePage() {
 
           {/* Seção direita do header */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full">
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full" aria-label="Upload video">
               <Video className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full">
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full" aria-label="Apps">
               <Grid3x3 className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full">
+            <Button variant="ghost" size="icon" className="hover:bg-gray-100 rounded-full" aria-label="Notifications">
               <BellIcon className="h-5 w-5" />
             </Button>
-            <Avatar className="h-8 w-8 cursor-pointer">
-              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" />
+            <Avatar className="h-8 w-8 cursor-pointer" aria-label="User profile">
+              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" alt="User avatar" />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
           </div>
@@ -208,7 +208,7 @@ export default function YouTubePage() {
                       id="thumb_6706cb8f4d8852000be1abc0" 
                       src="https://images.converteai.net/ed9b3b39-9391-4d8c-a4c9-98c3c0b84527/players/6706cb8f4d8852000be1abc0/thumbnail.jpg" 
                       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block;" 
-                      alt="thumbnail"
+                      alt="Video thumbnail"
                     />
                     <div 
                       id="backdrop_6706cb8f4d8852000be1abc0" 
@@ -244,7 +244,7 @@ export default function YouTubePage() {
                   <Button className="ml-4 bg-black hover:bg-gray-800 text-white rounded-full px-4 h-9">
                     Subscribe
                   </Button>
-                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100">
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100" aria-label="Subscribe to channel notifications">
                     <Bell className="h-5 w-5" />
                   </Button>
                 </div>
@@ -260,11 +260,11 @@ export default function YouTubePage() {
                       <ThumbsDown className="h-5 w-5" />
                     </Button>
                   </div>
-                  <Button variant="ghost" className="bg-gray-100 hover:bg-gray-200 rounded-full gap-2 h-9 px-4">
+                  <Button variant="ghost" className="bg-gray-100 hover:bg-gray-200 rounded-full gap-2 h-9 px-4" aria-label="Share video">
                     <Share className="h-5 w-5" />
                     <span className="font-semibold">Share</span>
                   </Button>
-                  <Button variant="ghost" size="icon" className="bg-gray-100 hover:bg-gray-200 rounded-full h-9 w-9">
+                  <Button variant="ghost" size="icon" className="bg-gray-100 hover:bg-gray-200 rounded-full h-9 w-9" aria-label="More options">
                     <MoreHorizontal className="h-5 w-5" />
                   </Button>
                 </div>
@@ -456,12 +456,12 @@ export default function YouTubePage() {
                 {/* Seção dos cards de preços */}
                 <div className="min-h-screen bg-gradient-to-b from-white to-pink-50 py-16 px-4 flex items-center justify-center">
                   <div className="max-w-7xl mx-auto w-full">
-                    <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 text-foreground">
-                      Let's Get Fit!
+                    <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 text-foreground" id="choose-package-title">
+                      Choose Your Package
                     </h1>
-                    <p className="text-center text-muted-foreground mb-12 text-lg">
-                      Select your Package
-                    </p>
+                    <h2 className="text-center text-muted-foreground mb-12 text-lg" id="choose-package-subtitle">
+                      Select the best option for your needs
+                    </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-center">
                       {/* Card: Try One */}

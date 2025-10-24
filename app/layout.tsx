@@ -18,8 +18,12 @@ export default function RootLayout({
   return (
     // Define o idioma da página como inglês
     <html lang="en">
+      <head>
+        <title>SALTBURN - Weight Loss Transformation</title>
+        <meta name="description" content="Discover the revolutionary 4-ingredient formula for weight loss. Choose your package and transform your life!" />
+      </head>
       {/* Aplica a fonte sans-serif e antialiasing ao body */}
-      <body className={`font-sans antialiased`}>
+      <body className={`font-sans antialiased bg-white text-gray-900`}>
         {/* Renderiza o conteúdo da página */}
         {children}
         {/* Adiciona o analytics da Vercel */}
