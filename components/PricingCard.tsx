@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ReactNode } from "react";
 
 // Define as propriedades aceitas pelo PricingCard
 interface PricingCardProps {
@@ -10,7 +11,7 @@ interface PricingCardProps {
   price: number;
   originalPrice?: number;
   savings?: number;
-  image: string;
+  image: ReactNode;
   isRecommended?: boolean;
   features?: string[];
   badgeText?: string;
@@ -51,12 +52,7 @@ export const PricingCard = ({
         <div className="p-4 flex flex-col items-center space-y-4">
           {/* Imagem do produto */}
           <div className="w-32 h-32 flex items-center justify-center">
-            <img 
-              src={image} 
-              alt={`Product image for ${title}`}
-              style={imageStyle}
-              className="max-w-full max-h-full object-contain" 
-            />
+            {image}
           </div>
 
           {/* Preço */}

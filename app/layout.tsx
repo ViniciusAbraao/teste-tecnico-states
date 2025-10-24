@@ -21,9 +21,12 @@ export default function RootLayout({
       <head>
         <title>SALTBURN - Weight Loss Transformation</title>
         <meta name="description" content="Discover the revolutionary 4-ingredient formula for weight loss. Choose your package and transform your life!" />
+        {/* Pré-conexão para origens externas críticas */}
+        <link rel="preconnect" href="https://api.dicebear.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://scripts.converteai.net" crossOrigin="anonymous" />
       </head>
       {/* Aplica a fonte sans-serif e antialiasing ao body */}
-      <body className={`font-sans antialiased bg-white text-gray-900`}>
+      <body className="font-sans antialiased bg-white text-gray-900">
         {/* Renderiza o conteúdo da página */}
         {children}
         {/* Adiciona o analytics da Vercel */}

@@ -1,7 +1,7 @@
 "use client" // Habilita o modo client-side do Next.js
 
 // Importa hooks e componentes utilizados na página
-import { useState } from "react"
+import React, { useState, useMemo, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
@@ -20,10 +20,34 @@ import {
   BellIcon,
   Menu,
 } from "lucide-react"
-import { PricingCard } from "@/components/PricingCard"
+import dynamic from "next/dynamic"
+import Image from "next/image"
+
+// Lazy load PricingCard para minimizar trabalho da thread principal
+// Envolvendo PricingCard em React.memo para evitar re-renderizações desnecessárias
+const PricingCard = dynamic(() => import("@/components/PricingCard").then(mod =>
+  // Se o componente for export default, use mod.default
+  // Se for export nomeado, use mod.PricingCard
+  React.memo(mod.PricingCard)
+))
 
 // Lista de comentários exibidos na página
-const comments = [
+interface Reply {
+  usuario: string;
+  avatar: string;
+  tempo: string;
+  texto: string;
+  likes: number;
+}
+interface Comment {
+  usuario: string;
+  avatar: string;
+  tempo: string;
+  texto: string;
+  likes: number;
+  replies: Reply[];
+}
+const initialComments: Comment[] = [
   {
     usuario: "Sarah Johnson",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
@@ -131,11 +155,18 @@ export default function YouTubePage() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
   // Estado para expandir/contrair respostas dos comentários
   const [expandedReplies, setExpandedReplies] = useState<number[]>([])
+  // Estado para paginação de comentários
+  const [visibleCount, setVisibleCount] = useState(5)
+  // Estado para controlar se o player de vídeo deve ser carregado
+  const [showPlayer, setShowPlayer] = useState(false)
 
-  // Função para alternar exibição das respostas
-  const toggleReplies = (index: number) => {
+  // Memoiza comentários visíveis para evitar cálculos desnecessários
+  const visibleComments = useMemo(() => initialComments.slice(0, visibleCount), [visibleCount])
+
+  // Função memoizada para alternar exibição das respostas
+  const toggleReplies = useCallback((index: number) => {
     setExpandedReplies((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
-  }
+  }, [])
 
   return (
     // Container principal da página
@@ -194,35 +225,49 @@ export default function YouTubePage() {
           <div className="flex-1 max-w-[1280px]">
             {/* Player do vídeo */}
             <div className="w-full bg-black rounded-xl overflow-hidden relative" style={{ aspectRatio: "16/9" }}>
-              <img
-                src="/before-and-after-weight-loss-transformation-showin.jpg"
-                alt="Weight loss transformation thumbnail"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div
-                id="vid_6706cb8f4d8852000be1abc0"
-                style={{ position: "relative", width: "100%", padding: "56.25% 0 0" }}
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    <img 
-                      id="thumb_6706cb8f4d8852000be1abc0" 
-                      src="https://images.converteai.net/ed9b3b39-9391-4d8c-a4c9-98c3c0b84527/players/6706cb8f4d8852000be1abc0/thumbnail.jpg" 
-                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block;" 
-                      alt="Video thumbnail"
-                    />
-                    <div 
-                      id="backdrop_6706cb8f4d8852000be1abc0" 
-                      style="-webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); position: absolute; top: 0; height: 100%; width: 100%;"
-                    ></div>
-                    <script type="text/javascript" id="scr_6706cb8f4d8852000be1abc0">
-                      var s=document.createElement("script");
-                      s.src="https://scripts.converteai.net/ed9b3b39-9391-4d8c-a4c9-98c3c0b84527/players/6706cb8f4d8852000be1abc0/player.js";
+              {/* Adia o carregamento do player externo até interação do usuário para minimizar trabalho da thread principal */}
+              {!showPlayer ? (
+                <button
+                  className="absolute inset-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 cursor-pointer"
+                  aria-label="Play video"
+                  onClick={() => setShowPlayer(true)}
+                >
+                  <Image
+                    src="/before-and-after-weight-loss-transformation-showin.jpg"
+                    alt="Weight loss transformation thumbnail"
+                    width={1280}
+                    height={720}
+                    className="w-full h-full object-cover rounded-xl"
+                    priority
+                  />
+                  <span className="absolute text-white text-3xl font-bold bg-black bg-opacity-50 px-6 py-2 rounded-full">Play</span>
+                </button>
+              ) : (
+                <div
+                  id="vid_6706cb8f4d8852000be1abc0"
+                  style={{ position: "relative", width: "100%", padding: "56.25% 0 0" }}
+                >
+                  <img 
+                    id="thumb_6706cb8f4d8852000be1abc0" 
+                    src="https://images.converteai.net/ed9b3b39-9391-4d8c-a4c9-98c3c0b84527/players/6706cb8f4d8852000be1abc0/thumbnail.jpg" 
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                    alt="Video thumbnail"
+                  />
+                  <div 
+                    id="backdrop_6706cb8f4d8852000be1abc0" 
+                    style={{ WebkitBackdropFilter: "blur(5px)", backdropFilter: "blur(5px)", position: "absolute", top: 0, height: "100%", width: "100%" }}
+                  ></div>
+                  {/* Insere o script do player dinamicamente para garantir execução */}
+                  <script dangerouslySetInnerHTML={{
+                    __html: `
+                      var s=document.createElement('script');
+                      s.src='https://scripts.converteai.net/ed9b3b39-9391-4d8c-a4c9-98c3c0b84527/players/6706cb8f4d8852000be1abc0/player.js';
                       s.async=true;
                       document.head.appendChild(s);
-                    </script>
-                  `,
-                }}
-              />
+                    `
+                  }} />
+                </div>
+              )}
             </div>
 
             {/* Informações do vídeo */}
@@ -316,7 +361,7 @@ export default function YouTubePage() {
               {/* Seção de comentários */}
               <div className="mt-6">
                 <div className="flex items-center gap-8 mb-6">
-                  <h2 className="text-xl font-semibold">{comments.length} Comments</h2>
+                  <h2 className="text-xl font-semibold">{initialComments.length} Comments</h2>
                   <Button variant="ghost" className="gap-2 hover:bg-transparent p-0">
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path d="M3 7h18M3 12h18M3 17h18" strokeWidth="2" strokeLinecap="round" />
@@ -342,7 +387,7 @@ export default function YouTubePage() {
 
                 {/* Lista de comentários */}
                 <div className="space-y-4">
-                  {comments.map((comment, index) => (
+                  {visibleComments.map((comment: Comment, index: number) => (
                     <div key={index} className="flex gap-4">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={comment.avatar || "/placeholder.svg"} />
@@ -451,6 +496,13 @@ export default function YouTubePage() {
                       </div>
                     </div>
                   ))}
+                  {visibleCount < initialComments.length && (
+                    <div className="text-center mt-4">
+                      <Button onClick={() => setVisibleCount((c) => c + 5)} aria-label="Carregar mais comentários">
+                        Carregar mais comentários
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Seção dos cards de preços */}
@@ -471,7 +523,7 @@ export default function YouTubePage() {
                         price={89}
                         originalPrice={157}
                         savings={68}
-                        image="/saltburn1.png"
+                        image={<Image src="/saltburn1.png" alt="Try One" width={140} height={200} />}
                         imageStyle={{ width: 140, height: 200 }}
                       />
 
@@ -482,7 +534,7 @@ export default function YouTubePage() {
                         price={49}
                         originalPrice={294}
                         savings={245}
-                        image="/saltburn6.png"
+                        image={<Image src="/saltburn6.png" alt="Best Value" width={200} height={300} priority />}
                         imageStyle={{ width: 200, height: 300 }}
                         isRecommended={true}
                         features={[
@@ -498,7 +550,7 @@ export default function YouTubePage() {
                         price={59}
                         originalPrice={177}
                         savings={118}
-                        image="/saltburn3.png"
+                        image={<Image src="/saltburn3.png" alt="Good Value" width={200} height={300} />}
                         imageStyle={{ width: 200, height: 300 }}
                       />
                     </div>
